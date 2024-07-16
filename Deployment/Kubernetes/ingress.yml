@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: monthlydata-api-route
+  namespace: monthlydata-api
+  labels:
+    kcert.dev/ingress: "managed"
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - colinkern.centralus.cloudapp.azure.com
+    secretName: colinkws-cert
+  rules:
+    - host: colinkern.centralus.cloudapp.azure.com
+      http:
+        paths:
+          - path: /API/Endpoint/Path/WebsiteAPI(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: monthlydata-api
+                port:
+                  number: 8080

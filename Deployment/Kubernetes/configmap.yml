@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: monthlydata-api-configmap
+  namespace: monthlydata-api
+data:
+  myDBConnection: "__GetFromPortal"

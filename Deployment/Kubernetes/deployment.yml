@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monthlydata-api
+  namespace: monthlydata-api
+  labels:
+    app: monthlydata-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: monthlydata-api
+  template:
+    metadata:
+      labels:
+        app: monthlydata-api
+    spec:
+      containers:
+        - name: monthlydata-api
+          image: __REPOSITORY_IMAGE__
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 20m
+              memory: 20Mi
+            limits:
+              cpu: 100m
+              memory: 100Mi
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: monthlydata-api-configmap
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: monthlydata-api
+  namespace: monthlydata-api
+  labels:
+    app: monthlydata-api
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: monthlydata-api
