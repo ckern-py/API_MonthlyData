@@ -2,6 +2,7 @@
 using MetaData;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -11,7 +12,7 @@ using System.Reflection;
 
 namespace MonthlyDataAPI.Controllers
 {
-    [Route("[controller]")]
+    [Route("[controller]/[action]")]
     [ApiController]
     public class MonthlyDataUsageController : ControllerBase
     {
@@ -19,23 +20,25 @@ namespace MonthlyDataAPI.Controllers
         private readonly IAzureSQLDB _azureSQLDB;
         private readonly IProcessMonthlyDataUsage _processDataUsage;
         private readonly IEmail _email;
+        private readonly IConfiguration _configuration;
 
-        public MonthlyDataUsageController(ILogger<MonthlyDataUsageController> logger, IAzureSQLDB azureSQLDB, IProcessMonthlyDataUsage processDataUsage, IEmail email)
+        public MonthlyDataUsageController(ILogger<MonthlyDataUsageController> logger, IAzureSQLDB azureSQLDB, IProcessMonthlyDataUsage processDataUsage, IEmail email, IConfiguration configuration)
         {
             _logger = logger;
             _azureSQLDB = azureSQLDB;
             _processDataUsage = processDataUsage;
             _email = email;
+            _configuration = configuration;
         }
 
         [HttpPost]
-        public JsonResult MonthlyDataUsage(DataUsageRequest request)
+        public JsonResult InsertMonthlyDataUsage(DataUsageRequest request)
         {
             _logger.LogInformation("Begin MonthlyDataUsage");
 
             BaseResponse response = new BaseResponse();
             DateTime startTime = Utility.GetrCentralTime();
-            List<string> requestingSystems = Utility.GetValidRequestingSystems();
+            List<string> requestingSystems = Utility.GetValidRequestingSystems(_configuration);
             string errorMessage = string.Empty;
             string innerEx = string.Empty;
 
@@ -43,7 +46,6 @@ namespace MonthlyDataAPI.Controllers
             {
                 if (requestingSystems.Contains(request.RequestingSystem))
                 {
-                    //add more checks before doing??
                     _processDataUsage.MonthlyUsageProcess(request);
                     response.Response = Constants.ResponseMessage.SuccessResponse;
                     HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
@@ -104,6 +106,5 @@ namespace MonthlyDataAPI.Controllers
 
             return new JsonResult(response);
         }
-
     }
 }
