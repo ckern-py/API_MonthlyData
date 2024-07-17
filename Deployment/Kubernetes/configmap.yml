@@ -4,4 +4,5 @@ metadata:
   name: monthlydata-api-configmap
   namespace: monthlydata-api
 data:
-  myDBConnection: "__GetFromPortal"
+  MY_DB_CONNECTION: "__GetFromPortal"
+  REQUESTING_SYSTEMS: "__GetFromPortal"
