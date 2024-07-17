@@ -8,7 +8,7 @@ namespace Domain
     {
         public static string GetSqlConnection(IConfiguration configuration)
         {
-            return configuration.GetConnectionString("myDBConnection");
+            return configuration["MY_DB_CONNECTION"];
         }
 
         public static DateTime GetrCentralTime()
@@ -26,9 +26,9 @@ namespace Domain
             return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
         }
 
-        public static List<string> GetValidRequestingSystems()
+        public static List<string> GetValidRequestingSystems(IConfiguration config)
         {            
-            return new List<string> { "NameOfSystem1", "NameOfSystem2" };
+            return new List<string> (config["REQUESTING_SYSTEMS"].Split(';') );
         }
     }
 }
