@@ -8,7 +8,7 @@ namespace Domain
     {
         public static string GetSqlConnection(IConfiguration configuration)
         {
-            return configuration.GetConnectionString("myDBConnection");
+            return configuration["MY_DB_CONNECTION"];
         }
 
         public static DateTime GetrCentralTime()

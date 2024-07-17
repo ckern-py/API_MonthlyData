@@ -33,9 +33,7 @@ namespace MonthlyDataAPI
             services.AddScoped<IEmail, Email>();
             services.AddScoped<IProcessMonthlyDataUsage, ProcessMonthlyDataUsage>();
 
-            // Change compatibility mode to 3_0
             services.AddControllers(option => option.EnableEndpointRouting = false);
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             services.AddMvc(option => option.EnableEndpointRouting = false);
 
             services.AddCors(options =>
