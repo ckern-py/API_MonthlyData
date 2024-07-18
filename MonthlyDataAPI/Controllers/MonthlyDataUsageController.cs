@@ -108,9 +108,9 @@ namespace MonthlyDataAPI.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetMonthlyDataForMonth(DataUsageRequest request)
+        public JsonResult GetDataTotalForMonth(DataUsageRequest request)
         {
-            _logger.LogInformation("Begin GetMonthlyDataForMonth");
+            _logger.LogInformation("Begin GetDataTotalForMonth");
 
             BaseResponse response = new BaseResponse();
             DateTime startTime = Utility.GetrCentralTime();
@@ -123,6 +123,7 @@ namespace MonthlyDataAPI.Controllers
                 if (requestingSystems.Contains(request.RequestingSystem))
                 {
                     //Get data here
+                    //_processDataUsage.GetDataTotalForGivenMonth(request.Month)
                     response.Response = Constants.ResponseMessage.SuccessResponse;
                     HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
                 }
@@ -157,7 +158,7 @@ namespace MonthlyDataAPI.Controllers
                 {
                     ApplicationName = "MonthlyDataAPI",
                     RequestingSystem = request.RequestingSystem,
-                    ApiMethod = "GetMonthlyDataForMonth",
+                    ApiMethod = "GetDataTotalForMonth",
                     RequestingStartDt = startTime.ToString("MMddyyy HH:mm:ss.ffff"),
                     RequestingEndDt = endTime.ToString("MMddyyy HH:mm:ss.ffff"),
                     ErrorMessage = errorMessage,
@@ -177,16 +178,16 @@ namespace MonthlyDataAPI.Controllers
                     _email.SendEmail(MethodBase.GetCurrentMethod().Name, logEx, loggingRequest);
                 }
 
-                _logger.LogInformation("End GetMonthlyDataForMonth");
+                _logger.LogInformation("End GetDataTotalForMonth");
             }
 
             return new JsonResult(response);
         }
 
         [HttpPost]
-        public JsonResult GetMonthlyDataForMonthByDay(DataUsageRequest request)
+        public JsonResult GetDailyDataForMonth(DataUsageRequest request)
         {
-            _logger.LogInformation("Begin GetMonthlyDataForMonthByDay");
+            _logger.LogInformation("Begin GetDailyDataForMonth");
 
             BaseResponse response = new BaseResponse();
             DateTime startTime = Utility.GetrCentralTime();
@@ -199,6 +200,7 @@ namespace MonthlyDataAPI.Controllers
                 if (requestingSystems.Contains(request.RequestingSystem))
                 {
                     //Get data here
+                    //_processDataUsage.GetDailyDataForGivenMonth(request.Month)
                     response.Response = Constants.ResponseMessage.SuccessResponse;
                     HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
                 }
@@ -233,7 +235,7 @@ namespace MonthlyDataAPI.Controllers
                 {
                     ApplicationName = "MonthlyDataAPI",
                     RequestingSystem = request.RequestingSystem,
-                    ApiMethod = "GetMonthlyDataForMonthByDay",
+                    ApiMethod = "GetDailyDataForMonth",
                     RequestingStartDt = startTime.ToString("MMddyyy HH:mm:ss.ffff"),
                     RequestingEndDt = endTime.ToString("MMddyyy HH:mm:ss.ffff"),
                     ErrorMessage = errorMessage,
@@ -253,7 +255,7 @@ namespace MonthlyDataAPI.Controllers
                     _email.SendEmail(MethodBase.GetCurrentMethod().Name, logEx, loggingRequest);
                 }
 
-                _logger.LogInformation("End GetMonthlyDataForMonthByDay");
+                _logger.LogInformation("End GetDailyDataForMonth");
             }
 
             return new JsonResult(response);
