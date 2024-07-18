@@ -27,8 +27,8 @@ namespace Domain
         }
 
         public static List<string> GetValidRequestingSystems(IConfiguration config)
-        {            
-            return new List<string> (config["REQUESTING_SYSTEMS"].Split(';') );
+        {
+            return new List<string>(config["REQUESTING_SYSTEMS"].Split(';'));
         }
     }
 }

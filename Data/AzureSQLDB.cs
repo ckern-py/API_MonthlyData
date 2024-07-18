@@ -85,7 +85,7 @@ namespace Data
 
         private void LogSQL(string method, string logString)
         {
-            _logger.LogInformation($"{ method} - {logString} - {DateTime.Now}");
+            _logger.LogInformation($"{method} - {logString} - {DateTime.Now}");
         }
     }
 }
