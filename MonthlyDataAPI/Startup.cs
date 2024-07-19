@@ -29,7 +29,6 @@ namespace MonthlyDataAPI
             services.AddMemoryCache();
 
             services.AddScoped<IAzureSQLDB, AzureSQLDB>();
-            services.AddScoped<IEmail, Email>();
             services.AddScoped<IProcessMonthlyDataUsage, ProcessMonthlyDataUsage>();
 
             services.AddControllers(option => option.EnableEndpointRouting = false);

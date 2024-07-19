@@ -31,6 +31,42 @@ namespace Data
             DataUsageLog(MethodBase.GetCurrentMethod().Name, "End");
         }
 
+        public GetDataTotalForMonthResponse GetDataTotalForGivenMonth(int monthInt, int year)
+        {
+            DataUsageLog(MethodBase.GetCurrentMethod().Name, "Begin");
+
+            TrafficDataMonthly dataMonthly = _azureSQLDB.GetMonthlyTraffic(monthInt, year);
+
+            GetDataTotalForMonthResponse dataResponse = new GetDataTotalForMonthResponse();
+
+            if (dataMonthly != null)
+            {
+                dataResponse = new GetDataTotalForMonthResponse()
+                {
+                    CalendarMonthNumber = dataMonthly.CalendarMonthIndex,
+                    CalendarMonthString = dataMonthly.CalendarMonth,
+                    CalendarYear = dataMonthly.CalendarYear,
+                    MonthlyDataIn_Mb = dataMonthly.MonthlyDataIn,
+                    MonthlyDataOut_Mb = dataMonthly.MonthlyDataOut
+                };
+            }
+
+            DataUsageLog(MethodBase.GetCurrentMethod().Name, "End");
+
+            return dataResponse;
+        }
+
+        public List<DailyData> GetDailyDataForGivenMonth(int monthNumber, int monthYear)
+        {
+            DataUsageLog(MethodBase.GetCurrentMethod().Name, "Begin");
+
+            List<DailyData> allDailyData = _azureSQLDB.GetDailyDataForMonth(monthNumber, monthYear);
+
+            DataUsageLog(MethodBase.GetCurrentMethod().Name, "End");
+
+            return allDailyData;
+        }
+
         private void ProcessDailyData(DataUsageRequest fullDataRequest)
         {
             DataUsageLog(MethodBase.GetCurrentMethod().Name, "Begin");
