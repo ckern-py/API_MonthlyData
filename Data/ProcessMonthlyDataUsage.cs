@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using Domain;
+﻿using Domain;
 using MetaData;
 using Microsoft.Extensions.Logging;
 using System;

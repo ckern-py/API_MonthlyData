@@ -70,7 +70,7 @@ namespace Data
             TrafficDataMonthly monthlyData = new TrafficDataMonthly();
 
             using (MonthlydataDBContext context = new MonthlydataDBContext(_dbOptions.Options))
-            {                
+            {
                 monthlyData = context.TrafficDataMonthly.Where(x => x.CalendarMonthIndex == monthInt && x.CalendarYear == year).FirstOrDefault();
             }
 
@@ -89,7 +89,8 @@ namespace Data
             {
                 dailyData = context.TrafficDataDaily
                             .Where(x => x.CalendarMonthIndex == monthNumber && x.CalendarYear == monthYear)
-                            .Select(y => new DailyData { 
+                            .Select(y => new DailyData
+                            {
                                 CalendarDay = y.CalendarDay,
                                 CalendarWeekDay = y.CalendarWeekDay,
                                 CalendarMonthNumber = y.CalendarMonthIndex,
