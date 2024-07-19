@@ -18,14 +18,12 @@ namespace MonthlyDataAPI.Controllers
     {
         private readonly ILogger _logger;
         private readonly IAzureSQLDB _azureSQLDB;
-        private readonly IEmail _email;
         private readonly IConfiguration _configuration;
 
-        public CheckHealthController(ILogger<CheckHealthController> logger, IAzureSQLDB azureSQLDB, IEmail email, IConfiguration configuration)
+        public CheckHealthController(ILogger<CheckHealthController> logger, IAzureSQLDB azureSQLDB, IConfiguration configuration)
         {
             _logger = logger;
             _azureSQLDB = azureSQLDB;
-            _email = email;
             _configuration = configuration;
         }
 
@@ -66,8 +64,6 @@ namespace MonthlyDataAPI.Controllers
                     innerEx = $"InnerEx: {ex.InnerException.Message}";
                     _logger.LogError(innerEx);
                 }
-
-                _email.SendEmail(MethodBase.GetCurrentMethod().Name, ex);
             }
             finally
             {
@@ -91,9 +87,9 @@ namespace MonthlyDataAPI.Controllers
                 {
                     _azureSQLDB.LogToDB(loggingRequest);
                 }
-                catch (Exception logEx)
+                catch (Exception)
                 {
-                    _email.SendEmail(MethodBase.GetCurrentMethod().Name, logEx, loggingRequest);
+                    //catch so that failed logging doesn't change request response
                 }
 
                 _logger.LogInformation("End CheckHealth");
@@ -140,8 +136,6 @@ namespace MonthlyDataAPI.Controllers
                     innerEx = $"InnerEx: {ex.InnerException.Message}";
                     _logger.LogError(innerEx);
                 }
-
-                _email.SendEmail(MethodBase.GetCurrentMethod().Name, ex);
             }
             finally
             {
@@ -165,9 +159,9 @@ namespace MonthlyDataAPI.Controllers
                 {
                     _azureSQLDB.LogToDB(loggingRequest);
                 }
-                catch (Exception logEx)
+                catch (Exception)
                 {
-                    _email.SendEmail(MethodBase.GetCurrentMethod().Name, logEx, loggingRequest);
+                    //catch so that failed logging doesn't change request response
                 }
 
                 _logger.LogInformation("End CheckHealthDB");

@@ -9,5 +9,6 @@ namespace Domain
         void LogToDB(MonthlyDataLogging loggingRequest);
         void InsertMonthlyData(TrafficDataMonthly monthlyData);
         void InsertDailyData(List<TrafficDataDaily> dailyData);
+        TrafficDataMonthly GetMonthlyTraffic(int monthInt, int year);
     }
 }

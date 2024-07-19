@@ -19,15 +19,13 @@ namespace MonthlyDataAPI.Controllers
         private readonly ILogger _logger;
         private readonly IAzureSQLDB _azureSQLDB;
         private readonly IProcessMonthlyDataUsage _processDataUsage;
-        private readonly IEmail _email;
         private readonly IConfiguration _configuration;
 
-        public MonthlyDataUsageController(ILogger<MonthlyDataUsageController> logger, IAzureSQLDB azureSQLDB, IProcessMonthlyDataUsage processDataUsage, IEmail email, IConfiguration configuration)
+        public MonthlyDataUsageController(ILogger<MonthlyDataUsageController> logger, IAzureSQLDB azureSQLDB, IProcessMonthlyDataUsage processDataUsage, IConfiguration configuration)
         {
             _logger = logger;
             _azureSQLDB = azureSQLDB;
             _processDataUsage = processDataUsage;
-            _email = email;
             _configuration = configuration;
         }
 
@@ -55,8 +53,6 @@ namespace MonthlyDataAPI.Controllers
                     response.Response = Constants.ResponseMessage.BadRequestResponse;
                     HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 }
-
-                _email.SendEmail(MethodBase.GetCurrentMethod().Name);
             }
             catch (Exception ex)
             {
@@ -71,8 +67,6 @@ namespace MonthlyDataAPI.Controllers
                     innerEx = $"InnerEx: {ex.InnerException.Message}";
                     _logger.LogError(innerEx);
                 }
-
-                _email.SendEmail(MethodBase.GetCurrentMethod().Name, ex);
             }
             finally
             {
@@ -96,9 +90,9 @@ namespace MonthlyDataAPI.Controllers
                 {
                     _azureSQLDB.LogToDB(loggingRequest);
                 }
-                catch (Exception logEx)
+                catch (Exception)
                 {
-                    _email.SendEmail(MethodBase.GetCurrentMethod().Name, logEx, loggingRequest);
+                    //catch so that failed logging doesn't change request response
                 }
 
                 _logger.LogInformation("End MonthlyDataUsage");
@@ -108,11 +102,11 @@ namespace MonthlyDataAPI.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetDataTotalForMonth(DataUsageRequest request)
+        public JsonResult GetDataTotalForMonth(GetDataTotalForMonthRequest request)
         {
             _logger.LogInformation("Begin GetDataTotalForMonth");
 
-            BaseResponse response = new BaseResponse();
+            GetDataTotalForMonthResponse response = new GetDataTotalForMonthResponse();
             DateTime startTime = Utility.GetrCentralTime();
             List<string> requestingSystems = Utility.GetValidRequestingSystems(_configuration);
             string errorMessage = string.Empty;
@@ -120,10 +114,9 @@ namespace MonthlyDataAPI.Controllers
 
             try
             {
-                if (requestingSystems.Contains(request.RequestingSystem))
+                if (requestingSystems.Contains(request.RequestingSystem) && request.MonthNumber > 0 && request.MonthYear > 0)
                 {
-                    //Get data here
-                    //_processDataUsage.GetDataTotalForGivenMonth(request.Month)
+                    response = _processDataUsage.GetDataTotalForGivenMonth(request.MonthNumber, request.MonthYear);
                     response.Response = Constants.ResponseMessage.SuccessResponse;
                     HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
                 }
@@ -132,8 +125,6 @@ namespace MonthlyDataAPI.Controllers
                     response.Response = Constants.ResponseMessage.BadRequestResponse;
                     HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 }
-
-                _email.SendEmail(MethodBase.GetCurrentMethod().Name);
             }
             catch (Exception ex)
             {
@@ -148,8 +139,6 @@ namespace MonthlyDataAPI.Controllers
                     innerEx = $"InnerEx: {ex.InnerException.Message}";
                     _logger.LogError(innerEx);
                 }
-
-                _email.SendEmail(MethodBase.GetCurrentMethod().Name, ex);
             }
             finally
             {
@@ -173,9 +162,9 @@ namespace MonthlyDataAPI.Controllers
                 {
                     _azureSQLDB.LogToDB(loggingRequest);
                 }
-                catch (Exception logEx)
+                catch (Exception)
                 {
-                    _email.SendEmail(MethodBase.GetCurrentMethod().Name, logEx, loggingRequest);
+                    //catch so that failed logging doesn't change request response
                 }
 
                 _logger.LogInformation("End GetDataTotalForMonth");
@@ -209,8 +198,6 @@ namespace MonthlyDataAPI.Controllers
                     response.Response = Constants.ResponseMessage.BadRequestResponse;
                     HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 }
-
-                _email.SendEmail(MethodBase.GetCurrentMethod().Name);
             }
             catch (Exception ex)
             {
@@ -225,8 +212,6 @@ namespace MonthlyDataAPI.Controllers
                     innerEx = $"InnerEx: {ex.InnerException.Message}";
                     _logger.LogError(innerEx);
                 }
-
-                _email.SendEmail(MethodBase.GetCurrentMethod().Name, ex);
             }
             finally
             {
@@ -245,14 +230,13 @@ namespace MonthlyDataAPI.Controllers
                     Debug2 = string.Join(", ", HttpContext.Request.Headers),
                     ReturnCode = HttpContext.Response.StatusCode.ToString()
                 };
-
                 try
                 {
                     _azureSQLDB.LogToDB(loggingRequest);
                 }
-                catch (Exception logEx)
+                catch (Exception)
                 {
-                    _email.SendEmail(MethodBase.GetCurrentMethod().Name, logEx, loggingRequest);
+                    //catch so that failed logging doesn't change request response
                 }
 
                 _logger.LogInformation("End GetDailyDataForMonth");

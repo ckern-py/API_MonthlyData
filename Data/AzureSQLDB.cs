@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Data
@@ -60,6 +61,22 @@ namespace Data
             }
 
             LogSQL(MethodBase.GetCurrentMethod().Name, "End");
+        }
+
+        public TrafficDataMonthly GetMonthlyTraffic(int monthInt, int year)
+        {
+            LogSQL(MethodBase.GetCurrentMethod().Name, "Begin");
+
+            TrafficDataMonthly monthlyData = new TrafficDataMonthly();
+
+            using (MonthlydataDBContext context = new MonthlydataDBContext(_dbOptions.Options))
+            {                
+                monthlyData = context.TrafficDataMonthly.Where(x => x.CalendarMonthIndex == monthInt && x.CalendarYear == year).FirstOrDefault();
+            }
+
+            LogSQL(MethodBase.GetCurrentMethod().Name, "End");
+
+            return monthlyData;
         }
 
         public void LogToDB(MonthlyDataLogging loggingRequest)
