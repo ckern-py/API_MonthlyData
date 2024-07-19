@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using Azure.Core;
+using Domain;
 using MetaData;
 using Microsoft.Extensions.Logging;
 using System;
@@ -54,6 +55,17 @@ namespace Data
             DataUsageLog(MethodBase.GetCurrentMethod().Name, "End");
 
             return dataResponse;
+        }
+
+        public List<DailyData> GetDailyDataForGivenMonth(int monthNumber, int monthYear)
+        {
+            DataUsageLog(MethodBase.GetCurrentMethod().Name, "Begin");
+
+            List<DailyData> allDailyData = _azureSQLDB.GetDailyDataForMonth(monthNumber, monthYear);
+
+            DataUsageLog(MethodBase.GetCurrentMethod().Name, "End");
+
+            return allDailyData;
         }
 
         private void ProcessDailyData(DataUsageRequest fullDataRequest)

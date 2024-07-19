@@ -174,11 +174,11 @@ namespace MonthlyDataAPI.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetDailyDataForMonth(DataUsageRequest request)
+        public JsonResult GetDailyDataForMonth(GetDailyDataForMonthRequest request)
         {
             _logger.LogInformation("Begin GetDailyDataForMonth");
 
-            BaseResponse response = new BaseResponse();
+            GetDailyDataForMonthResponse response = new GetDailyDataForMonthResponse();
             DateTime startTime = Utility.GetrCentralTime();
             List<string> requestingSystems = Utility.GetValidRequestingSystems(_configuration);
             string errorMessage = string.Empty;
@@ -188,8 +188,7 @@ namespace MonthlyDataAPI.Controllers
             {
                 if (requestingSystems.Contains(request.RequestingSystem))
                 {
-                    //Get data here
-                    //_processDataUsage.GetDailyDataForGivenMonth(request.Month)
+                    response.DailyData = _processDataUsage.GetDailyDataForGivenMonth(request.MonthNumber, request.MonthYear);
                     response.Response = Constants.ResponseMessage.SuccessResponse;
                     HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
                 }

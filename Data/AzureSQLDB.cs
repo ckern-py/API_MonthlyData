@@ -79,6 +79,33 @@ namespace Data
             return monthlyData;
         }
 
+        public List<DailyData> GetDailyDataForMonth(int monthNumber, int monthYear)
+        {
+            LogSQL(MethodBase.GetCurrentMethod().Name, "Begin");
+
+            List<DailyData> dailyData = new List<DailyData>();
+
+            using (MonthlydataDBContext context = new MonthlydataDBContext(_dbOptions.Options))
+            {
+                dailyData = context.TrafficDataDaily
+                            .Where(x => x.CalendarMonthIndex == monthNumber && x.CalendarYear == monthYear)
+                            .Select(y => new DailyData { 
+                                CalendarDay = y.CalendarDay,
+                                CalendarWeekDay = y.CalendarWeekDay,
+                                CalendarMonthNumber = y.CalendarMonthIndex,
+                                CalendarMonthString = y.CalendarMonth,
+                                CalendarYear = y.CalendarYear,
+                                DailyDataIn_Mb = y.DailyDataIn,
+                                DailyDataOut_Mb = y.DailyDataOut
+                            }).OrderBy(z => z.CalendarDay)
+                            .ToList();
+            }
+
+            LogSQL(MethodBase.GetCurrentMethod().Name, "End");
+
+            return dailyData;
+        }
+
         public void LogToDB(MonthlyDataLogging loggingRequest)
         {
             LogSQL(MethodBase.GetCurrentMethod().Name, "Begin");

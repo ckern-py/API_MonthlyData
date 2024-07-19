@@ -1,4 +1,5 @@
 ﻿using MetaData;
+using System.Collections.Generic;
 
 namespace Domain
 {
@@ -6,5 +7,6 @@ namespace Domain
     {
         void MonthlyUsageProcess(DataUsageRequest dataRequest);
         GetDataTotalForMonthResponse GetDataTotalForGivenMonth(int monthInt, int year);
+        List<DailyData> GetDailyDataForGivenMonth(int monthNumber, int monthYear);
     }
 }

@@ -10,5 +10,6 @@ namespace Domain
         void InsertMonthlyData(TrafficDataMonthly monthlyData);
         void InsertDailyData(List<TrafficDataDaily> dailyData);
         TrafficDataMonthly GetMonthlyTraffic(int monthInt, int year);
+        List<DailyData> GetDailyDataForMonth(int monthNumber, int monthYear);
     }
 }
