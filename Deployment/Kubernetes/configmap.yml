@@ -6,3 +6,4 @@ metadata:
 data:
   MY_DB_CONNECTION: "__GetFromPortal__"
   REQUESTING_SYSTEMS: "__GetFromPortal__"
+  APPLICATIONINSIGHTS_CONNECTION_STRING: "__GetFromPortal__"
